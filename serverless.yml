@@ -1,0 +1,27 @@
+service: aws-nodejs
+
+# frameworkVersion: "=X.X.X"
+
+provider:
+  name: aws
+  runtime: nodejs4.3
+  stage: "1"
+  region: us-east-1
+  profile: perceptionz
+  iamRoleStatements:
+    - Effect: "Allow"
+      Action:
+        - "dynamodb:Query"
+        - "dynamodb:Scan"
+        - "dynamodb:GetItem"
+        - "dynamodb:PutItem"
+        - "dynamodb:UpdateItem"
+        - "dynamodb:DeleteItem"
+      Resource: "arn:aws:dynamodb:${self:provider.region}:*:table/*"
+functions:
+  receivepaymentevent:
+    handler: handler.receivepayment
+    events:
+      - http:
+          path: /receive-payment-event
+          method: post
